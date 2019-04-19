@@ -4,24 +4,23 @@ import config from '@root/google.config';
 
 class GoogleMap extends Component {
   state = {
+    defaultLocation: {
+      lat: 22.337118,
+      lng: 114.148293
+    },
     markers: []
   };
 
   componentWillMount() {
-    const defaultLocation = {
-      lat: 22.337118,
-      lng: 114.148293
-    };
-
     const currentLocationMarker = {
-      position: { ...defaultLocation },
+      position: { ...this.state.defaultLocation },
       title: 'This your current location',
       name: 'You'
     };
 
     const markers = [currentLocationMarker];
 
-    this.setState({ defaultLocation, currentLocationMarker, markers });
+    this.setState({ currentLocationMarker, markers });
   }
 
   render() {
