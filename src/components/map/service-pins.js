@@ -1,13 +1,25 @@
+import ServiceLocation from './service-location';
+
 export default class ServicePins {
-  constructor(currentLocation, onMarkersUpdated) {
+  constructor(map, onMarkersUpdated) {
+    this._map = map;
+    this._location = new ServiceLocation(map);
     this._places = [];
     this.onMarkersUpdated = onMarkersUpdated;
-    this.you = currentLocation;
+
+    this.refresh();
   }
 
   updateMarkers() {
     this._markers = [this._you, ...this._places];
     this.onMarkersUpdated(this._markers);
+  }
+
+  refresh() {
+    this._location.get().then((pos) => {
+      this._map.setCenter(pos);
+      this.you = pos;
+    });
   }
 
   set you(pos) {

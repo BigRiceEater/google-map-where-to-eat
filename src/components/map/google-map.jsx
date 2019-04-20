@@ -1,40 +1,25 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper, Map, Marker } from 'google-maps-react';
 import ServicePlaces from './service-places';
-import ServiceLocation from './service-location';
 import ServicePins from './service-pins';
 import config from '@root/google.config';
 
 class GoogleMap extends Component {
-  constructor(props) {
-    super(props);
-
-    const location = new ServiceLocation();
-    const pins = new ServicePins(location.default, this.handleMarkersUpdated);
-
-    this.state = {
-      services: { location, pins },
-      markers: pins.markers
-    };
-  }
-
-  handleMarkersUpdated = (markers) => {
-    this.setState({ markers });
+  state = {
+    services: {},
+    markers: []
   };
 
-  updateCurrentLocation = (currentLocation, map) => {
-    const { pins } = this.state.services;
-    pins.you = currentLocation;
-    map.setCenter(currentLocation);
+  createServices = (google, map) => {
+    const pins = new ServicePins(map, (markers) => this.setState({ markers }));
+    const places = new ServicePlaces(google, map);
+    pins.refresh();
+    this.setState({ services: { pins, places } });
   };
 
   handleMapReady = (mapProps, map) => {
     const { google } = mapProps;
-    const { location } = this.state.services;
-
-    location.get().then((pos) => this.updateCurrentLocation(pos, map));
-    const places = new ServicePlaces(google, map);
-    this.setState({ services: { ...this.state.services, places } });
+    this.createServices(google, map);
   };
 
   handleDragend = () => {
