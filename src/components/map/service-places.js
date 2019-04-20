@@ -1,4 +1,4 @@
-export default class PlacesService {
+export default class ServicePlaces {
   constructor(google, map, currentLocation) {
     this.google = google;
     this.service = new google.maps.places.PlacesService(map);

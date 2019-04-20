@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper, Map, Marker } from 'google-maps-react';
-import PlacesService from './../../modules/places/api';
+import ServicePlaces from './service-places';
 import config from '@root/google.config';
 
 class GoogleMap extends Component {
@@ -28,7 +28,7 @@ class GoogleMap extends Component {
   handleMapReady = (mapProps, map) => {
     const { google } = mapProps;
     const { currentLocation } = this.state;
-    const placesService = new PlacesService(google, map, currentLocation);
+    const placesService = new ServicePlaces(google, map, currentLocation);
 
     this.setState({ placesService });
   };
