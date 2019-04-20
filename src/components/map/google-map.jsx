@@ -10,31 +10,36 @@ class GoogleMap extends Component {
     const location = new ServiceLocation();
     const currentLocation = location.default;
 
-    const currentLocationMarker = {
+    const you = {
       position: currentLocation,
       title: 'This your current location',
       name: 'You'
     };
 
-    const markers = [];
-
+    const places = [];
     this.state = {
       services: { location },
       currentLocation,
-      currentLocationMarker,
-      markers
+      you,
+      places,
+      markers: [you, ...places]
     };
   }
 
   updateCurrentLocation = (currentLocation, map) => {
-    const currentLocationMarker = {
+    const you = {
       position: currentLocation,
       title: 'This your current location',
       name: 'You'
     };
-    const markers = [currentLocationMarker];
-    this.setState({ currentLocation, currentLocationMarker, markers });
+    this.setState({ currentLocation, you });
     map.setCenter(currentLocation);
+    this.updateMarkers();
+  };
+
+  updateMarkers = () => {
+    const { you, places } = this.state;
+    this.setState({ markers: [you, ...places] });
   };
 
   handleMapReady = (mapProps, map) => {
