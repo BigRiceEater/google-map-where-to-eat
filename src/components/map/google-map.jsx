@@ -2,44 +2,30 @@ import React, { Component } from 'react';
 import { GoogleApiWrapper, Map, Marker } from 'google-maps-react';
 import ServicePlaces from './service-places';
 import ServiceLocation from './service-location';
+import ServicePins from './service-pins';
 import config from '@root/google.config';
 
 class GoogleMap extends Component {
   constructor(props) {
     super(props);
+
     const location = new ServiceLocation();
-    const currentLocation = location.default;
+    const pins = new ServicePins(location.default, this.handleMarkersUpdated);
 
-    const you = {
-      position: currentLocation,
-      title: 'This your current location',
-      name: 'You'
-    };
-
-    const places = [];
     this.state = {
-      services: { location },
-      currentLocation,
-      you,
-      places,
-      markers: [you, ...places]
+      services: { location, pins },
+      markers: pins.markers
     };
   }
 
-  updateCurrentLocation = (currentLocation, map) => {
-    const you = {
-      position: currentLocation,
-      title: 'This your current location',
-      name: 'You'
-    };
-    this.setState({ currentLocation, you });
-    map.setCenter(currentLocation);
-    this.updateMarkers();
+  handleMarkersUpdated = (markers) => {
+    this.setState({ markers });
   };
 
-  updateMarkers = () => {
-    const { you, places } = this.state;
-    this.setState({ markers: [you, ...places] });
+  updateCurrentLocation = (currentLocation, map) => {
+    const { pins } = this.state.services;
+    pins.you = currentLocation;
+    map.setCenter(currentLocation);
   };
 
   handleMapReady = (mapProps, map) => {
@@ -48,7 +34,7 @@ class GoogleMap extends Component {
 
     location.get().then((pos) => this.updateCurrentLocation(pos, map));
     const places = new ServicePlaces(google, map);
-    this.setState({ services: { location, places } });
+    this.setState({ services: { ...this.state.services, places } });
   };
 
   handleDragend = () => {
