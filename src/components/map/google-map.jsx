@@ -5,14 +5,10 @@ import ServiceLocation from './service-location';
 import config from '@root/google.config';
 
 class GoogleMap extends Component {
-  state = {
-    currentLocation: {}
-  };
-
   constructor(props) {
     super(props);
     const location = new ServiceLocation();
-    const currentLocation = location.get();
+    const currentLocation = location.default;
 
     const currentLocationMarker = {
       position: currentLocation,
@@ -20,7 +16,7 @@ class GoogleMap extends Component {
       name: 'You'
     };
 
-    const markers = [currentLocationMarker];
+    const markers = [];
 
     this.state = {
       services: { location },
@@ -30,11 +26,23 @@ class GoogleMap extends Component {
     };
   }
 
+  updateCurrentLocation = (currentLocation, map) => {
+    const currentLocationMarker = {
+      position: currentLocation,
+      title: 'This your current location',
+      name: 'You'
+    };
+    const markers = [currentLocationMarker];
+    this.setState({ currentLocation, currentLocationMarker, markers });
+    map.setCenter(currentLocation);
+  };
+
   handleMapReady = (mapProps, map) => {
     const { google } = mapProps;
     const { location } = this.state.services;
-    const { currentLocation } = this.state;
-    const places = new ServicePlaces(google, map, currentLocation);
+
+    location.get().then((pos) => this.updateCurrentLocation(pos, map));
+    const places = new ServicePlaces(google, map);
     this.setState({ services: { location, places } });
   };
 

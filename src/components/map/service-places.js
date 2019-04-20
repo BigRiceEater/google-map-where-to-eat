@@ -1,8 +1,8 @@
 export default class ServicePlaces {
-  constructor(google, map, currentLocation) {
+  constructor(google, map) {
     this.google = google;
     this.service = new google.maps.places.PlacesService(map);
-    this._currentLocation = currentLocation;
+    this._currentLocation = null;
   }
 
   set currentLocation(latlongObject) {
