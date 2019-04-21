@@ -35,25 +35,25 @@ class GoogleMap extends Component {
   render() {
     const { currentLocation, markers } = this.state;
     return (
-      <div>
-        <Map
-          google={this.props.google}
-          zoom={14}
-          initialCenter={currentLocation}
-          onReady={this.handleMapReady}
-          onDragend={this.handleDragend}
-          onClick={this.handleMapClick}>
-          {markers.map((marker) => (
-            <Marker
-              key={marker.name}
-              name={marker.name}
-              position={marker.position}
-            />
-          ))}
-        </Map>
-      </div>
+      <Map
+        google={this.props.google}
+        zoom={14}
+        initialCenter={currentLocation}
+        onReady={this.handleMapReady}
+        onDragend={this.handleDragend}
+        onClick={this.handleMapClick}>
+        {markers.map((marker) => (
+          <Marker
+            key={marker.name}
+            name={marker.name}
+            position={marker.position}
+          />
+        ))}
+      </Map>
     );
   }
 }
 
-export default GoogleApiWrapper({ apiKey: config.apiKey })(GoogleMap);
+export default GoogleApiWrapper({
+  apiKey: config.apiKey
+})(GoogleMap);
