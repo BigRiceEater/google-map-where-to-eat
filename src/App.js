@@ -7,14 +7,12 @@ class App extends Component {
   render() {
     return (
       <div className='columns is-gapless' style={{ height: '100%' }}>
-        <div className='column is-three-quarters'>
-          <div
-            id='map-container'
-            style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <div className='column is-three-quarters is-tablet'>
+          <div id='map-container'>
             <GoogleMap />
           </div>
         </div>
-        <div className='column is-one-quarter'>
+        <div className='column is-one-quarter is-tablet'>
           <Panel />
         </div>
       </div>
