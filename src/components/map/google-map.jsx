@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper, Map, Marker } from 'google-maps-react';
 import ServicePlaces from './service-places';
+import ServiceLocation from './service-location';
 import ServicePins from './service-pins';
 import config from '@root/google.config';
 
@@ -11,15 +12,19 @@ class GoogleMap extends Component {
   };
 
   createServices = (google, map) => {
-    const pins = new ServicePins(map, (markers) => this.setState({ markers }));
+    const location = new ServiceLocation();
+    const pins = new ServicePins((markers) => this.setState({ markers }));
     const places = new ServicePlaces(google, map);
-    pins.refresh();
-    this.setState({ services: { pins, places } });
+    this.setState({ services: { location, pins, places } });
   };
 
   handleMapReady = (mapProps, map) => {
     const { google } = mapProps;
     this.createServices(google, map);
+    this.state.services.location.get().then((pos) => {
+      map.setCenter(pos);
+      this.state.services.pins.you = pos;
+    });
   };
 
   handleDragend = () => {
